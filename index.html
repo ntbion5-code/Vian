@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catch The Box</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #141e30, #243b55);
+      color: white;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      margin: 20px 0 8px;
+    }
+
+    .info {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    #game {
+      position: relative;
+      width: 95vw;
+      max-width: 600px;
+      height: 65vh;
+      margin: auto;
+      border: 3px solid white;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    #box {
+      position: absolute;
+      width: 55px;
+      height: 55px;
+      background: #ffcc00;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255,204,0,0.8);
+      transition: transform 0.08s;
+    }
+
+    #box:active {
+      transform: scale(0.8);
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      background: #00d4ff;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00a8cc;
+    }
+
+    #message {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🎯 Catch The Box</h1>
+
+  <div class="info">
+    <div>Skor: <span id="score">0</span></div>
+    <div>Waktu: <span id="time">30</span>s</div>
+  </div>
+
+  <div id="game">
+    <div id="box"></div>
+  </div>
+
+  <button onclick="startGame()">▶ Mulai Game</button>
+
+  <div id="message">Tekan tombol untuk mulai!</div>
+
+  <script>
+    const box = document.getElementById("box");
+    const game = document.getElementById("game");
+    const scoreText = document.getElementById("score");
+    const timeText = document.getElementById("time");
+    const message = document.getElementById("message");
+
+    let score = 0;
+    let time = 30;
+    let timer;
+    let playing = false;
+
+    function moveBox() {
+      const maxX = game.clientWidth - box.offsetWidth;
+      const maxY = game.clientHeight - box.offsetHeight;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      box.style.left = x + "px";
+      box.style.top = y + "px";
+    }
+
+    function startGame() {
+      clearInterval(timer);
+
+      score = 0;
+      time = 30;
+      playing = true;
+
+      scoreText.textContent = score;
+      timeText.textContent = time;
+      message.textContent = "Tangkap kotaknya! 🔥";
+
+      box.style.display = "block";
+      moveBox();
+
+      timer = setInterval(() => {
+        time--;
+        timeText.textContent = time;
+
+        if (time <= 0) {
+          clearInterval(timer);
+          playing = false;
+          box.style.display = "none";
+
+          message.textContent =
+            `⏰ Waktu habis! Skor kamu: ${score}`;
+        }
+      }, 1000);
+    }
+
+    box.addEventListener("click", () => {
+      if (!playing) return;
+
+      score++;
+      scoreText.textContent = score;
+
+      moveBox();
+    });
+
+    box.style.display = "none";
+  </script>
+
+</body>
+</html>
